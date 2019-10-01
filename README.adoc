@@ -1,0 +1,8 @@
+
+= ExoticLanguageQuest
+
+This project is about experimentingi/implementing exotic languages.
+
+== Brainfuck
+
+Currently brainfuck can be transcompiled to C++ and LuaJIT.
