@@ -12,17 +12,16 @@ local data = file:read("*a")
 
 -- parse brainfuck
 
-local function get_op(c)
-  if c == ">" then return {"ptr", 1}
-  elseif c == "<" then return {"ptr", -1}
-  elseif c == "+" then return {"val", 1}
-  elseif c == "-" then return {"val", -1}
-  elseif c == "." then return {"out", 1}
-  elseif c == "," then return {"in", 1}
-  elseif c == "[" then return {"loop", 1}
-  elseif c == "]" then return {"loop", -1}
-  end
-end
+local ops = {
+  [">"] = {"ptr", 1},
+  ["<"] = {"ptr", -1},
+  ["+"] = {"val", 1},
+  ["-"] = {"val", -1},
+  ["."] = {"out", 1},
+  [","] = {"in", 1},
+  ["["] = {"loop_in", 1},
+  ["]"] = {"loop_out", 1}
+}
 
 local bytecode = {}
 do
@@ -31,7 +30,7 @@ do
 
   for i=1,string.len(data) do
     local c = string.sub(data,i,i)
-    local op = get_op(c)
+    local op = ops[c]
     if op then
       if op[1] ~= mode then -- new op mode
         if mode then -- output previous op
@@ -83,12 +82,10 @@ int main(int argc, char **argv)
       else
         print("  putchar(*ptr);")
       end
-    elseif bc[1] == "loop" then
-      if bc[2] > 0 then
-        for i=1,bc[2] do print("  while(*ptr){") end
-      else
-        for i=1,-bc[2] do print("  }") end
-      end
+    elseif bc[1] == "loop_in" then
+      for i=1,bc[2] do print("  while(*ptr){") end
+    elseif bc[1] == "loop_out" then
+      for i=1,bc[2] do print("  }") end
     end
   end
 
@@ -124,12 +121,10 @@ local C = ffi.C
       else
         print("C.putchar(ptr[0])")
       end
-    elseif bc[1] == "loop" then
-      if bc[2] > 0 then
-        for i=1,bc[2] do print("while ptr[0] ~= 0 do") end
-      else
-        for i=1,-bc[2] do print("end") end
-      end
+    elseif bc[1] == "loop_in" then
+      for i=1,bc[2] do print("while ptr[0] ~= 0 do") end
+    elseif bc[1] == "loop_out" then
+      for i=1,bc[2] do print("end") end
     end
   end
 else
