@@ -4,6 +4,7 @@
 -- mem: (optional) brainfuck memory in bytes
 local path, target, mem = ...
 if not target then target = "bytecode" end
+mem = tonumber(mem) or 30000
 
 local file = io.open(path, "rb")
 if not file then error("invalid file path") end
