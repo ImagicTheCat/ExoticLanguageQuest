@@ -115,7 +115,7 @@ local C = ffi.C
       print("mem[ptr]=mem[ptr]+"..bc[2])
     elseif bc[1] == "in" then
       for i=1,bc[2] do
-        print("mem[ptr] = getchar()")
+        print("mem[ptr] = C.getchar()")
       end
     elseif bc[1] == "out" then
       if bc[2] > 1 then
