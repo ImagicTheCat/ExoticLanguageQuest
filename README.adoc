@@ -1,7 +1,7 @@
 
 = ExoticLanguageQuest
 
-This project is about experimentingi/implementing exotic languages.
+This project is about experimenting/implementing exotic languages.
 
 == Brainfuck
 
