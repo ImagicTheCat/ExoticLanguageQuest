@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 elseif target == "luajit" then
   print([[local ffi = require("ffi")]])
   print("local mem = ffi.new(\"char["..mem.."]\")")
-  print("local ptr = 0")
+  print("local ptr = mem")
   print([=[
 ffi.cdef([[
 int getchar(void);
@@ -112,20 +112,20 @@ local C = ffi.C
     if bc[1] == "ptr" then
       print("ptr=ptr+"..bc[2])
     elseif bc[1] == "val" then
-      print("mem[ptr]=mem[ptr]+"..bc[2])
+      print("ptr[0]=ptr[0]+"..bc[2])
     elseif bc[1] == "in" then
       for i=1,bc[2] do
-        print("mem[ptr] = C.getchar()")
+        print("ptr[0] = C.getchar()")
       end
     elseif bc[1] == "out" then
       if bc[2] > 1 then
-        print("for i=1,"..bc[2].." do C.putchar(mem[ptr]) end")
+        print("for i=1,"..bc[2].." do C.putchar(ptr[0]) end")
       else
-        print("C.putchar(mem[ptr])")
+        print("C.putchar(ptr[0])")
       end
     elseif bc[1] == "loop" then
       if bc[2] > 0 then
-        for i=1,bc[2] do print("while mem[ptr] ~= 0 do") end
+        for i=1,bc[2] do print("while ptr[0] ~= 0 do") end
       else
         for i=1,-bc[2] do print("end") end
       end
